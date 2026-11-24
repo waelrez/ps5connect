@@ -1,0 +1,116 @@
+
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#080b12">
+  <title>PlayStation 5 System Software</title>
+  <meta name="description" content="A PlayStation-inspired browser operating system simulation.">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="assets/ps5-mark.svg" type="image/svg+xml">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <link rel="stylesheet" href="css/system.css">
+</head>
+<body>
+  <div id="boot" class="screen boot-screen">
+    <div class="boot-mark">PS<span>5</span></div>
+    <div class="boot-spinner"></div>
+    <p>Starting system software</p>
+  </div>
+
+  <div id="setup" class="screen setup-screen hidden">
+    <div class="setup-glow"></div>
+    <div class="setup-card">
+      <div class="ps-symbol">PS</div>
+      <p class="kicker">WELCOME TO PLAYSTATION 5</p>
+      <h1 id="setupTitle">Who's using this console?</h1>
+      <p class="muted" id="setupSubtitle">Choose a user or create a new profile.</p>
+      <div id="profileChoices" class="profile-choices"></div>
+      <div id="createProfile" class="create-profile hidden">
+        <label for="newName">Online ID</label>
+        <input id="newName" maxlength="16" placeholder="Your player name" autocomplete="off">
+        <label>Choose your avatar</label>
+        <div id="avatarChoices" class="avatar-choices"></div>
+        <div class="button-row">
+          <button class="btn ghost" id="cancelCreate">Cancel</button>
+          <button class="btn primary" id="createUser">Create user</button>
+        </div>
+      </div>
+      <button class="btn ghost wide" id="addUser">＋ Add User</button>
+      <div class="setup-foot">This is an independent browser-based OS simulation.</div>
+    </div>
+  </div>
+
+  <div id="os" class="os hidden">
+    <header class="topbar">
+      <div class="top-left"><span class="ps-mini">PS</span><span class="system-word">PlayStation</span></div>
+      <div class="top-right">
+        <span id="clock">--:--</span>
+        <button class="icon-button" id="installApp" title="Install app" style="display:none">↓</button><button class="icon-button" id="quickOpen" title="Control Center">☰</button>
+        <button class="user-chip" id="userOpen"><span id="userAvatar" class="avatar small">W</span><span id="userName">Player</span></button>
+      </div>
+    </header>
+
+    <main class="home-view" id="homeView">
+      <div class="home-heading">
+        <div><p class="kicker">YOUR CONSOLE</p><h1>Welcome back, <span id="greetingName">Player</span></h1></div>
+        <div class="online-state"><i></i> Online</div>
+      </div>
+
+      <nav class="home-tabs" aria-label="Home sections">
+        <button class="home-tab active" data-tab="games">Games</button>
+        <button class="home-tab" data-tab="media">Media</button>
+      </nav>
+
+      <section class="library-section">
+        <div class="section-title"><div><h2 id="libraryTitle">Your games</h2><p id="librarySub">Your game library</p></div><button class="text-button" id="sortGames">Recently added ↕</button></div>
+        <div id="gameGrid" class="game-grid">
+          <div class="empty-library">
+            <div class="empty-icon">＋</div>
+            <h2>Your library is waiting</h2>
+            <p>Games you add to this system will appear here.</p>
+            <button class="btn primary" id="openGameManager">Add games</button>
+          </div>
+        </div>
+      </section>
+      <div class="home-bottom">
+        <button class="bottom-tile" data-open="game-manager"><span>＋</span><b>Game Library</b><small>Manage your games</small></button>
+        <button class="bottom-tile" data-open="profile"><span>◉</span><b>Profile</b><small>Account and trophies</small></button>
+        <button class="bottom-tile" data-open="settings"><span>⚙</span><b>Settings</b><small>System preferences</small></button>
+        <button class="bottom-tile" data-open="power"><span>⏻</span><b>Power</b><small>Rest mode and restart</small></button>
+      </div>
+    </main>
+
+    <aside id="controlCenter" class="control-center hidden">
+      <div class="cc-head"><span>CONTROL CENTER</span><button class="icon-button" id="quickClose">×</button></div>
+      <div class="cc-grid">
+        <button class="cc-tile" data-open="profile"><span>◉</span><b>Profile</b></button>
+        <button class="cc-tile" data-open="notifications"><span>♧</span><b>Notifications</b></button>
+        <button class="cc-tile" data-open="downloads"><span>⇩</span><b>Downloads</b></button>
+        <button class="cc-tile" data-open="settings"><span>⚙</span><b>Settings</b></button>
+        <button class="cc-tile" data-open="game-manager"><span>▣</span><b>Game Library</b></button>
+        <button class="cc-tile" data-open="power"><span>⏻</span><b>Power</b></button>
+      </div>
+      <div class="cc-footer"><span id="controllerStatus">Controller: Not connected</span><span>Internet: Browser connection</span></div>
+    </aside>
+
+    <section id="panelLayer" class="panel-layer hidden">
+      <div class="panel-window">
+        <div class="panel-header"><div><p class="kicker" id="panelKicker">SYSTEM</p><h2 id="panelTitle">Settings</h2></div><button class="icon-button" id="panelClose">×</button></div>
+        <div id="panelContent" class="panel-content"></div>
+      </div>
+    </section>
+
+    <section id="gamePlayer" class="game-player hidden">
+      <div class="player-bar"><span id="playingTitle">Game</span><button class="btn ghost" id="exitGame">✕ Close game</button></div>
+      <iframe id="gameFrame" title="Game player" allow="fullscreen; autoplay; gamepad" sandbox="allow-scripts allow-same-origin allow-forms allow-pointer-lock allow-downloads"></iframe>
+      <div id="noGameFrame" class="no-game-frame hidden">This game could not be opened. Check its file path in <code>js/games.js</code>.</div>
+    </section>
+    <div id="toast" class="toast"></div>
+  </div>
+  <script src="js/games.js"></script>
+  <script src="js/system.js"></script>
+</body>
+</html>
